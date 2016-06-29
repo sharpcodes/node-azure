@@ -5,12 +5,15 @@ var azure = require('azure');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 
-  var serviceBusService = azure.createServiceBusService('Endpoint=sb://scsqueue1-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=vxH6aZlqXSHjVCyXzOJ9iLj7fKBmwOJZnRW7bymT0oE=');
+  console.log("request received");
+  var serviceBusService = azure.createServiceBusService('Endpoint=sb://lowes-scs.servicebus.windows.net/;SharedAccessKeyName=lowes-scs;SharedAccessKey=FSKiTpdgm3jmnaHcNPVMoj9iJd4QCca6RuX+LFHTJgc=');
 
-  serviceBusService.receiveQueueMessage('SCSQUEUE1', function(error, receivedMessage){
+  serviceBusService.receiveQueueMessage('scs.stores.inbound', function(error, receivedMessage){
     if(!error){
       console.log("message drained "+receivedMessage);
       res.render('index', { message: JSON.stringify(receivedMessage.body) });
+    }else{
+      console.log(error);
     }
   });
 
