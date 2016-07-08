@@ -8,13 +8,18 @@ var https=require('https');
 router.get('/', function(req, res) {
 
   console.log("calling datapower");
+  var payLoad={name:'sai'};
   var options={
-    hostname:'extb2b.lowes.com',
+    host:'b2bservices-azure-dev.lowes.com',
     port:901,
-    path:'AzureWebGetRequest',
+    path:'/AzureWebGetRequest',
     rejectUnauthorized: false,
-    method:'GET',
-    headers:{"Authorization":"Basic RHluYW1pY3NDUk06RU42MFZGbjVuNlpmQWpNWA=="}
+    method:'POST',
+    headers:{
+      "Authorization":"Basic RHluYW1pY3NDUk06RU42MFZGbjVuNlpmQWpNWA==",
+      "Content-Type":"application/json",
+      "Content-Length": Buffer.byteLength(JSON.stringify(payLoad))
+    }
   };
 
   var req2=https.request(options, function(response) {
@@ -26,17 +31,15 @@ router.get('/', function(req, res) {
       // Response received
       var parsedResponse =body;
       console.log("response -->"+parsedResponse);
-      res.render('index', { title: 'Express',response:parsedResponse });
+      res.render('index', { title: 'modified',response:parsedResponse });
     });
   });
-
+  console.log(JSON.stringify(payLoad));
+  req2.write(JSON.stringify(payLoad));
   req2.on('error', function(e) {
     console.error(e);
   });
   req2.end();
-
-
-
 });
 
 module.exports = router;
